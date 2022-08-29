@@ -4,13 +4,17 @@ import { galleryItems } from './gallery-items.js';
 console.log(galleryItems);
 
 const list = document.querySelector(".gallery");
+list.innerHTML = elemnt(galleryItems);
 
-const elemnt = galleryItems.map(el => {
-   
-    return `<a class="gallery__item" href="${el.original}">
-  <img class="gallery__image" src="${el.preview}" alt="${el.description}" />
-</a>`
-   
-});
+function elemnt(gallery) {
+    const imageEl = gallery.map(
+        ({ preview, original, description }) =>
+            `<a class="gallery__item" href="${original}">
+   <img class="gallery__image" src="${preview}" alt="${description}" />
+ </a>`
+    ).join('');
 
-list.insertAdjacentHTML("beforeEnd", elemnt);
+    return imageEl;
+};
+
+new SimpleLightbox('.gallery a', { captionsData: 'alt', captionsDelay: 250 });
