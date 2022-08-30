@@ -3,15 +3,15 @@ import { galleryItems } from './gallery-items.js';
 
 console.log(galleryItems);
 
+const galleryContainer = document.querySelector('.gallery');
 
-const list = document.querySelector(".gallery");
-list.innerHTML = elemnt(galleryItems);
+galleryContainer.innerHTML = createElements(galleryItems);
 
 
-function elemnt(gallery) {
-    const imageEl = gallery.map(
-        ({ preview, original, description }) =>
-            `<div class="gallery__item">
+// добавляем картинки в список
+function createElements(gallery) {
+    const imageEl = gallery.map(({ preview, original, description }) =>
+        `<div class="gallery__item">
   <a class="gallery__link" href="${original}">
     <img
       class="gallery__image"
@@ -26,40 +26,41 @@ function elemnt(gallery) {
     return imageEl;
 };
 
-
-let modalWindow = null;
+let instance = null;
+let showModalLightbox;
 
 
 function showModal() {
-    const modalLightbox = ({ alt, dataset: { source } }) => {
-        modalWindow = basicLightbox.create(
-            `<img style='color: #fff' src='${source}' alt='${alt}' width='800' height='600'`, {
-            onShow: addKeyBoardControl,
-            onClose: removeKeyBoardControl,
-        }
+    showModalLightbox = ({ alt, dataset: { source } }) => {
+        instance = basicLightbox.create(`<img src='${source}' alt='${alt}'`,
+            {
+                onShow: () => window.addEventListener('keydown', onWindowKeyDown)
+            },
+            {
+                onClose: () => window.removeKeyBoardControl('keydown', onWindowKeyDown),
+            }
         );
 
-        modalWindow.show();
+        instance.show();
     };
+};
 
-    const addKeyBoardControl = () => window.addEventListener('keydown', onWindowKeyDown);
-    const removeKeyBoardControl = () => window.addEventListener('keydown', onWindowKeyDown);
 
-    const onWindowKeyDown = ({ code }) => {
+// закрытие по кнопке
+const onWindowKeyDown = ({ code }) => {
         if (code !== 'Escape') return;
-        
-        modalWindow.close();
-    };
 
-    const onGalleryListClick = event => {
+        instance.close();
+};
+    
+// открываем в том же окне
+const onGalleryContainerClick = event => {
         event.preventDefault();
 
         if (event.target.nodeName !== 'IMG') return;
 
-        modalLightbox(event.target);
+        showModalLightbox(event.target);
     };
 
-    list.addEventListener('click', onGalleryListClick);
-};
-
+galleryContainer.addEventListener('click', onGalleryContainerClick);
 showModal();
