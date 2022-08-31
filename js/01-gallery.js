@@ -52,6 +52,4 @@ const onGalleryContainerClick = event => {
         instance.show();
     };
 
-// galleryContainer.addEventListener('click', onGalleryContainerClick);
-console.log(galleryContainer.addEventListener('click', onGalleryContainerClick)
-);
+galleryContainer.addEventListener('click', onGalleryContainerClick);
