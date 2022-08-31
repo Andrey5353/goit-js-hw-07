@@ -22,17 +22,12 @@ function createElements(gallery) {
   </a>
 </div>`
     ).join('');
-
+console.log(imageEl);
     return imageEl;
 };
 
-let instance = null;
-let showModalLightbox;
 
-
-function showModal() {
-    showModalLightbox = ({ alt, dataset: { source } }) => {
-        instance = basicLightbox.create(`<img src='${source}' alt='${alt}'`,
+const instance = basicLightbox.create(`<img src='' alt=''`,
             {
                 onShow: () => window.addEventListener('keydown', onWindowKeyDown)
             },
@@ -40,11 +35,6 @@ function showModal() {
                 onClose: () => window.removeKeyBoardControl('keydown', onWindowKeyDown),
             }
         );
-
-        instance.show();
-    };
-};
-
 
 // закрытие по кнопке
 const onWindowKeyDown = ({ code }) => {
@@ -58,9 +48,10 @@ const onGalleryContainerClick = event => {
         event.preventDefault();
 
         if (event.target.nodeName !== 'IMG') return;
-
-        showModalLightbox(event.target);
+        instance.element().querySelector('img').src = event.target.dataset.source;
+        instance.show();
     };
 
-galleryContainer.addEventListener('click', onGalleryContainerClick);
-showModal();
+// galleryContainer.addEventListener('click', onGalleryContainerClick);
+console.log(galleryContainer.addEventListener('click', onGalleryContainerClick)
+);
