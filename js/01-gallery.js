@@ -1,17 +1,16 @@
 import { galleryItems } from './gallery-items.js';
 // Change code below this line
 
-console.log(galleryItems);
+// console.log(galleryItems);
 
 const galleryContainer = document.querySelector('.gallery');
-
 galleryContainer.innerHTML = createElements(galleryItems);
 
 
-// добавляем картинки в список
-function createElements(gallery) {
-    const imageEl = gallery.map(({ preview, original, description }) =>
-        `<div class="gallery__item">
+// // добавляем картинки в список
+function createElements(imageConfig = []) {
+    return imageConfig.map(({ preview, original, description }) => {
+      return  `<div class="gallery__item">
   <a class="gallery__link" href="${original}">
     <img
       class="gallery__image"
@@ -21,18 +20,16 @@ function createElements(gallery) {
     />
   </a>
 </div>`
-    ).join('');
-console.log(imageEl);
-    return imageEl;
+    }).join('');
 };
 
 
-const instance = basicLightbox.create(`<img src='' alt=''`,
+const instance = basicLightbox.create(`<img src='' alt=''>`,
             {
                 onShow: () => window.addEventListener('keydown', onWindowKeyDown)
             },
             {
-                onClose: () => window.removeKeyBoardControl('keydown', onWindowKeyDown),
+                onClose: () => window.removeEventListener('keydown', onWindowKeyDown),
             }
         );
 
@@ -47,8 +44,8 @@ const onWindowKeyDown = ({ code }) => {
 const onGalleryContainerClick = event => {
         event.preventDefault();
 
-        if (event.target.nodeName !== 'IMG') return;
-        instance.element().querySelector('img').src = event.target.dataset.source;
+    if (event.target.nodeName !== 'IMG') return;
+        instance.element().querySelector('img').src = event.target.dataset.source
         instance.show();
     };
 
